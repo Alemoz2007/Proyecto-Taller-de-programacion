@@ -6,13 +6,15 @@ dependiendo del método de cifrado que desea utilizar")
     continuar = True
     while continuar:
         try:
-             indicación=(input("Digite '1' para el método de cifrado césar; '2' para\
+             print()
+             indicación=int(input("Digite '1' para el método de cifrado césar; '2' para\
 el cifrado monoalfabético con palabra clave; '3' para el cifrado vigenère; '4' para el \
 el cifrado PlayFair; '5' para el cifrado Rail Fence; '6' para el cifrado escítala:  "))
-             while indicación not in ["1", "2", "3", "4", "5", "6"]:
-                 print("Indicación invalida") #indicación es solo para seleccionar método
-                 indicación = input("Digite algún número válido para continuar: ")
-        #Acá se podría limpiar la pantalla. 
+             limpiar_pantalla()
+             while indicación not in [1,2,3,4,5,6]:
+                 print("Indicación invalida") 
+                 indicación = int(input("Digite algún número válido para continuar: "))
+                 limpiar_pantalla()
              if indicación == 1:
                  print("Cifrado César")
                  selección = int(input("Digite '1' si lo que desea es codificar, de lo contrario, digite '2' para decodificar: "))
@@ -53,13 +55,14 @@ el cifrado PlayFair; '5' para el cifrado Rail Fence; '6' para el cifrado escíta
                      print("Codificar") # Acá iría playfairCod(texto, palabra)
                  else:
                      print("Decodificar") # Acá iría playfairDec(texto, palabra)
-             elif indicación == 5:
+             elif indicación == 5: #Hay que arreglar eso
                  print("Cifrado Rail Fence")
                  selección = int(input("Digite '1' si lo que desea es codificar, de lo contrario, digite '2' para decodificar: "))
                  while selección not in (1, 2):
                      selección=int(input("Digite uno de los valores válidos: "))
                  if selección == 1:
-                     print("Codificar") # Acá iría railfenceCod(texto)
+                     texto=input("Diguite el texto que desea codificar: ")
+                     print (f"Su texto codificado es: {railfenceCod(texto)}")
                  else:
                      print("Decodificar") # Acá iría railfenceDec(texto)
              else:
@@ -74,6 +77,7 @@ el cifrado PlayFair; '5' para el cifrado Rail Fence; '6' para el cifrado escíta
         except Exception as e:
             print(f"Error:{e}")
             continuar = False
+        continuar = repetir()
 
 def bienvenida():
     """Programa que se encarga de imprimir un mensaje de bienvenidad para introducir al usuario el programa.
@@ -385,7 +389,54 @@ def cesarDec(texto, desplazamiento):
             resultado += ALFABETO[nueva_posicion]
 
     return resultado
-
+def railfenceCod(texto):
+    mensaje = puntuación(texto)
+    if type(mensaje) != list:
+        raise Exception("El texto debe ser una lista")
+    resultado = []
+    línea1 = mensaje[0:len(mensaje):4]
+    resultado.append(línea1)
+    línea2 = mensaje[1:len(mensaje):2]
+    resultado.append(línea2)
+    línea3 = mensaje[2:len(mensaje):4]
+    resultado.append(línea3)
+    encriptado = "".join("".join(bloque) for bloque in resultado)
+    return encriptado
+def puntuación(texto):
+    if type(texto) != str or texto == "":
+        raise Exception("El texto debe ser de tipo string, y tener algo escrito dentro")
+    texto = texto.replace(" ","-")
+    lista1 = list(texto)
+    símbolos = ".,:;¡!¿?#$%&/()=+*{[]}_"
+    mensaje = []
+    for letra in lista1:
+        if letra not in símbolos:
+            mensaje.append(letra)
+    while len(mensaje)%4 != 0:
+        mensaje.append("-")
+    return mensaje
+def limpiar_pantalla():
+    """Función que se encarga de imprimir líneas en blanco para 'limpiar' la pantalla
+No tiene entradas ni restricciones, solo imprime 40 líneas en blanco"""
+    print("\n" * 10)
+def repetir():
+    """Función booleana que se encarga de preguntarle al usuario sí desea volver a utilizar el programa o no, además, en el caso de que la respuesta sea
+negativa, se encarga de imprimir el mensaje de despedida.
+Entradas: No tiene.
+Restricciones: El usuario solo puede escribir 's' o 'n', además de que la salida es un valor booleano.
+Salidas: True en el caso de que el usuario desee continuar, en caso contrario False, después de mostrar el mensaje de  despedida."""
+    print()
+    print("¿Desea volver a utilizar el programa?")
+    respuesta=input("Digite 'S' en caso de que desea utilizarlo de nuevo, de lo contrario digite 'N': ")
+    respuesta = respuesta.lower()
+    while respuesta not in ["s","n"]:
+        respuesta = input("¿Desea utiliza el programa de nuevo? Digite 'S' o 'N': ")
+        respuesta = respuesta.lower()
+    if respuesta == "s":
+        return True
+    else:
+        print("Le agradecemos por utilizar el programa. Hasta luego")
+        return False
 main()
    
     
