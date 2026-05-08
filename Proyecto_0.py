@@ -18,10 +18,19 @@ el cifrado PlayFair; '5' para el cifrado Rail Fence; '6' para el cifrado escíta
                  selección = int(input("Digite '1' si lo que desea es codificar, de lo contrario, digite '2' para decodificar: "))
                  while selección not in (1, 2):
                      selección=int(input("Digite uno de los valores válidos: "))
+
+                 texto = input("Digite el texto: ")
+
+                 desplazamiento = int(input("Digite el desplazamiento: "))
+
                  if selección == 1:
-                     print("Codificar") # Acá iría cesarCod(texto, desplazamiento)
+                  resultado = cesarCod(texto, desplazamiento)
+                  print("Texto codificado:")
+                  print(resultado)
                  else:
-                     print("Decodificar") # Acá iría cesarDec(texto, desplazamiento)
+                   resultado = cesarDec(texto, desplazamiento)
+                   print("Texto decodificado:")
+                   print(resultado)
              elif indicación == 2:
                  print("Cifrado Monoalfabético con Palabra Clave")
                  selección = int(input("Digite '1' si lo que desea es codificar, de lo contrario, digite '2' para decodificar: "))
@@ -308,7 +317,74 @@ def vigenereDec(mensaje, clave):
                 texto_descodificado = texto_descodificado + letra
 
         return texto_descodificado
+    
+ALFABETO = "abcdefghijklmnñopqrstuvwxyz"
 
+
+def limpiarTexto(texto):
+    texto = texto.lower()
+
+    reemplazos = {
+        "á": "a",
+        "é": "e",
+        "í": "i",
+        "ó": "o",
+        "ú": "u"
+    }
+
+    texto_limpio = ""
+
+    for letra in texto:
+        if letra in reemplazos:
+            letra = reemplazos[letra]
+
+        if letra in ALFABETO or letra == " ":
+            texto_limpio += letra
+
+    return texto_limpio
+
+def cesarCod(texto, desplazamiento):
+    if type(desplazamiento) != int:
+        raise Exception("El desplazamiento debe ser un número entero")
+
+    texto = limpiarTexto(texto)
+
+    resultado = ""
+
+    for caracter in texto:
+
+        if caracter == " ":
+            resultado += " "
+        else:
+            posicion = ALFABETO.index(caracter)
+
+            nueva_posicion = (posicion + desplazamiento) % len(ALFABETO)
+
+            resultado += ALFABETO[nueva_posicion]
+
+    return resultado
+
+
+def cesarDec(texto, desplazamiento):
+    if type(desplazamiento) != int:
+        raise Exception("El desplazamiento debe ser un número entero")
+
+    texto = limpiarTexto(texto)
+
+    resultado = ""
+
+    for caracter in texto:
+
+        if caracter == " ":
+            resultado += " "
+        else:
+            posicion = ALFABETO.index(caracter)
+
+            nueva_posicion = (posicion - desplazamiento) % len(ALFABETO)
+
+            resultado += ALFABETO[nueva_posicion]
+
+    return resultado
 
 main()
    
