@@ -38,10 +38,17 @@ el cifrado PlayFair; '5' para el cifrado Rail Fence; '6' para el cifrado escíta
                  selección = int(input("Digite '1' si lo que desea es codificar, de lo contrario, digite '2' para decodificar: "))
                  while selección not in (1, 2):
                      selección=int(input("Digite uno de los valores válidos: "))
+                 texto = input("Digite el texto: ")
+                 palabra = input( "Digite la palabra clave: " )
+
                  if selección == 1:
-                     print("Codificar") # Acá iría monoCod(texto, palabra)
+                    resultado = monoCod(texto,palabra)
+                    print("Texto codificado:")
+                    print(resultado)
                  else:
-                     print("Decodificar") # Acá iría monoDec(texto, palabra)
+                    resultado = monoDec(texto,palabra)
+                    print("Texto decodificado:")
+                    print(resultado)
              elif indicación == 3:
                  print("Cifrado Vigenère")
                  mainVigenere()
@@ -526,6 +533,75 @@ Salidas: True en el caso de que el usuario desee continuar, en caso contrario Fa
     else:
         print("Le agradecemos por utilizar el programa. Hasta luego")
         return False
+
+def crearAlfabetoClave(palabra):
+
+    palabra = limpiarTexto(palabra)
+
+    if palabra == "":
+        raise Exception(
+            "La palabra clave no puede estar vacía"
+        )
+
+    clave_sin_repetidas = ""
+
+    for letra in palabra:
+
+        if letra != " " and letra not in clave_sin_repetidas:
+            clave_sin_repetidas += letra
+
+    alfabeto_cifrado = clave_sin_repetidas
+
+    for letra in ALFABETO:
+
+        if letra not in alfabeto_cifrado:
+            alfabeto_cifrado += letra
+
+    return alfabeto_cifrado
+
+
+def monoCod(texto, palabra):
+
+    texto = limpiarTexto(texto)
+
+    alfabeto_cifrado = crearAlfabetoClave(
+        palabra
+    )
+
+    resultado = ""
+
+    for caracter in texto:
+
+        if caracter == " ":
+            resultado += " "
+        else:
+            posicion = ALFABETO.index(caracter)
+
+            resultado += alfabeto_cifrado[posicion]
+    return resultado
+
+def monoDec(texto, palabra):
+
+    texto = limpiarTexto(texto)
+
+    alfabeto_cifrado = crearAlfabetoClave(
+        palabra
+    )
+    resultado = ""
+
+    for caracter in texto:
+
+        if caracter == " ":
+            resultado += " "
+
+        else:
+            posicion = alfabeto_cifrado.index(
+                caracter
+            )
+
+            resultado += ALFABETO[posicion]
+
+    return resultado
 main()
    
     
