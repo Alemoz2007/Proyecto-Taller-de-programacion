@@ -55,14 +55,9 @@ el cifrado PlayFair; '5' para el cifrado Rail Fence; '6' para el cifrado escíta
                  print()
              elif indicación == 4:
                  print("Cifrado PlayFair")
-                 selección = int(input("Digite '1' si lo que desea es codificar, de lo contrario, digite '2' para decodificar: "))
-                 while selección not in (1, 2):
-                     selección=int(input("Digite uno de los valores válidos: "))
-                 if selección == 1:
-                     print("Codificar") # Acá iría playfairCod(texto, palabra)
-                 else:
-                     print("Decodificar") # Acá iría playfairDec(texto, palabra)
-             elif indicación == 5: #Hay que arreglar eso
+                 mainPlayfair()
+                 print()
+             elif indicación == 5:
                  print("Cifrado Rail Fence")
                  selección = int(input("Digite '1' si lo que desea es codificar, de lo contrario, digite '2' para decodificar: "))
                  while selección not in (1, 2):
@@ -334,6 +329,154 @@ def vigenereDec(mensaje, clave):
                 texto_descodificado = texto_descodificado + letra
 
         return texto_descodificado
+
+def mainPlayfair():
+    """Programa principal del algoritmo playfair.
+    Entradas y restricciones:
+    -Palabra clave.
+    -Texto a codificar o decodificar dependiendo de las preferencias del usuario.
+    Salidas: Palabra codifica o decodificada."""
+    clave = leerClave()
+    texto_clave = preparar(clave)
+    matriz = crearMatriz(texto_clave)
+    opcion = elegirOpcion()
+    if opcion == "1":
+        mensaje = leerMensaje()
+        texto_mensaje = preparar(mensaje)
+        texto_codificado = playfairCod(texto_mensaje, texto_clave)
+        print("Texto codificado:", texto_codificado)
+    elif opcion == "2":
+        mensaje2 = leerMensaje2()
+        texto_mensaje2 = preparar(mensaje2)
+        texto_decodificado = playfairDec(texto_mensaje2, texto_clave)
+        print("Texto decodificado:", texto_decodificado)
+
+
+def crearMatriz(clave):
+    """Funcion que se encarga de crear la matriz para codificar o decodificar el texto, dependiendo de las preferencias del usuario.
+    Entradas y restricciones:
+    -Palabra clave.
+    Salidas: La matriz."""
+    alfabeto = "abcdefghijklmnñopqrstuvwxyz123"
+    usadas = ""
+    for letra in clave:
+        if letra not in usadas and letra != " ":
+            usadas += letra
+    for letra in alfabeto:
+        if letra not in usadas:
+            usadas += letra
+    matriz = []
+    posicion = 0
+    for fila in range(6):
+        fila_actual = []
+        for columna in range(5):
+            if posicion < len(usadas):
+                fila_actual.append(usadas[posicion])
+                posicion += 1
+        matriz.append(fila_actual)
+    return matriz
+
+def buscarLetra(matriz, letra):
+    """Funcion que se encarga de encontrar la posicion de cada letra de la matriz.
+    Entradas y restricciones:
+    -Matriz
+    Salidas: La posicion de cada letra dentro de la matriz."""
+    for fila in range(len(matriz)):
+        for columna in range(len(matriz[fila])):
+            if matriz[fila][columna] == letra:
+                return fila, columna
+
+def separarPares(mensaje):
+    """Funcion que se encarga de agregar un 1 si el texto tiene letras repetidas.
+    Entradas y restricciones:
+    -Texto a codificar o decodificar.
+    Salidas: Texto pulido."""
+    pares = []
+    mensaje = mensaje.replace(" ", "")
+    if len(mensaje) % 2 != 0:
+        mensaje += "1"
+    for i in range(0, len(mensaje), 2):
+        pares.append(mensaje[i] + mensaje[i + 1])
+    return pares
+
+def ponerEspacios(texto_original, texto_nuevo):
+    """Funcion que se encarga de agregar los espacios al texto original una vez codificado o decodificado.
+    Entrada y restricciones:
+    -Texto sin espacios
+    Salidas: Texto con espacios."""
+    resultado = ""
+    posicion = 0
+    for caracter in texto_original:
+        if caracter == " ":
+            resultado += " "
+        else:
+            resultado += texto_nuevo[posicion]
+            posicion += 1
+    while posicion < len(texto_nuevo):
+        resultado += texto_nuevo[posicion]
+        posicion += 1
+    return resultado
+
+def playfairCod(mensaje, clave):
+    """Funcion para la codificacion de el algoritmo playfair.
+    Entradas y restricciones:
+    -Palabra clave
+    -Texto a codificar
+    Salidas: Texto codificado."""
+    matriz = crearMatriz(clave)
+    mensaje_original = mensaje
+    mensaje = mensaje.replace(" ", "")
+    pares = separarPares(mensaje)
+    texto_codificado = ""
+    for par in pares:
+        letra1 = par[0]
+        letra2 = par[1]
+        fila1, col1 = buscarLetra(matriz, letra1)
+        fila2, col2 = buscarLetra(matriz, letra2)
+        if fila1 == fila2:
+            nueva1 = matriz[fila1][(col1 + 1) % len(matriz[fila1])]
+            nueva2 = matriz[fila2][(col2 + 1) % len(matriz[fila2])]
+        elif col1 == col2:
+            nueva1 = matriz[(fila1 + 1) % len(matriz)][col1]
+            nueva2 = matriz[(fila2 + 1) % len(matriz)][col2]
+        else:
+            nueva1 = matriz[fila1][col2]
+            nueva2 = matriz[fila2][col1]
+        texto_codificado += nueva1 + nueva2
+    texto_codificado = ponerEspacios(mensaje_original, texto_codificado)
+    return texto_codificado
+
+def playfairDec(mensaje, clave):
+    """Funcion que se encarga de la decodificacion del algoritmo playfair.
+    Entradas y restricciones:
+    -Palabra clave
+    -Texto a decodificar
+    Salidas: Texto decodificado."""
+    matriz = crearMatriz(clave)
+    mensaje_original = mensaje
+    mensaje = mensaje.replace(" ", "")
+    pares = separarPares(mensaje)
+    texto_decodificado = ""
+    for par in pares:
+        letra1 = par[0]
+        letra2 = par[1]
+        fila1, col1 = buscarLetra(matriz, letra1)
+        fila2, col2 = buscarLetra(matriz, letra2)
+        if fila1 == fila2:
+            nueva1 = matriz[fila1][(col1 - 1) % len(matriz[fila1])]
+            nueva2 = matriz[fila2][(col2 - 1) % len(matriz[fila2])]
+        elif col1 == col2:
+            nueva1 = matriz[(fila1 - 1) % len(matriz)][col1]
+            nueva2 = matriz[(fila2 - 1) % len(matriz)][col2]
+        else:
+            nueva1 = matriz[fila1][col2]
+            nueva2 = matriz[fila2][col1]
+        texto_decodificado += nueva1 + nueva2
+    texto_decodificado = ponerEspacios(mensaje_original, texto_decodificado)
+    if texto_decodificado[-1] == "1":
+        texto_decodificado = texto_decodificado[:-1]
+    return texto_decodificado
+
     
 ALFABETO = "abcdefghijklmnñopqrstuvwxyz"
 
