@@ -103,7 +103,7 @@ def bienvenida():
     -ninguna
     Salidas: El mensaje de bienvenida."""
     print("Bienvenido al programa de codificacion y decodificacion de mensajes.")
-    print("Creado por Luis, Justin, Miranda.")
+    print("Creado por Luis, Jeaustin, Miranda.")
     print("En este programa hay varios algoritmos, cada uno con una manera unica de codificar o decodificar, dependiendo de las preferencias del usuario.")
 
 def mainVigenere():
