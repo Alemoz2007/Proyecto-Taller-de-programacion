@@ -75,6 +75,8 @@ el cifrado PlayFair; '5' para el cifrado Rail Fence; '6' para el cifrado escíta
                      print (f"Su texto codificado es: {railfenceCod(texto)}")
                  else:
                      texto=input("Diguite el texto que desea descodificar: ")
+                     if type(texto) != str or texto == "":
+                         raise Exception("El texto debe ser de tipo string, y tener algo escrito dentro")
                      print (f"Su texto descodificado es: {railfenceDec(texto)}")
              else:
                  print("Cifrado Escítala")
@@ -469,6 +471,8 @@ Entradas: un string, la frase a codificar.
 Restricciones: la frase debe ser de tipo string, al igual que la salida.
 Salidas: Un string la frase codificada.
 (Utiliza la función puntuación(texto)"""
+    if not texto.strip() or texto.isdigit():
+        raise Exception("El texto que ingresó es inválido, o contiene número o no ingresó nada")
     mensaje = puntuación(texto)
     if type(mensaje) != list:
         raise Exception("El texto debe ser una lista")
@@ -503,9 +507,11 @@ Salidas: Una lista que contiene la frase original, solo que en este formato, sin
 def railfenceDec(texto):
      """Función "principal" de la descodificación del cifrado rail fence.
 Entradas: un string, la frase a descodificar.
-Restricciones: la frase debe ser de tipo string, al igual que la salida.
+Restricciones: la frase debe ser de tipo string, además de que la longitud del texto debe ser múltiplo de cuatro(sin los espacios) al igual que la salida.
 Salidas: Un string la frase descodificada.
 (Utiliza la función combinar(línea1, línea2, línea3)"""
+     if not texto.strip() or texto.isdigit():
+        raise Exception("El texto que ingresó es inválido, o contiene número o no ingresó nada")
      texto = texto.replace(" ","")
      if type(texto) != str or len(texto)%4 != 0:
          raise Exception("El dato debe ser un string y debe ser múltiplo de 4")
@@ -540,7 +546,7 @@ Entradas: Un texto a codificar (String) y el número de letras que cabe encada "
 Restricciones: El texto debe ser de tipo str, al igual que la salida, mientras que el numero de lineas debe ser un entero mayor a 1
 Salidas: Un string, el texto codificado
 (Utiliza la función puntuación(texto)"""
-    if type(texto) != str or texto == "" or type(lineas) != int or lineas < 1:
+    if not texto.strip() or texto.isdigit() or type(lineas) != int or lineas < 1:
         raise Exception("Alguno de los valores que ingresó es un valor inválido, por favor intente de nuevo")
     mensaje = puntuación(texto)
     while len(mensaje) % lineas != 0:
@@ -556,10 +562,10 @@ Salidas: Un string, el texto codificado
 def escitalaDec(texto, lineas):
     """Función que se encarga de descodificar el texto del cifrado escítala
 Entradas: Un texto a descodificar (String) y el número de letras que cabe encada "vuelta" (int)
-Restricciones: El texto debe ser de tipo str, al igual que la salida, mientras que el numero de lineas debe ser un entero mayor a 1
+Restricciones: El texto debe ser de tipo str, al igual que la salida, además de que la longitud de la entrada debe ser multiplo del número de líneas. Mientras que el numero de lineas debe ser un entero mayor a 1 
 Salidas: Un string, el texto descodificado"""
     texto = texto.replace(" ","")
-    if type(texto) != str or len(texto)%lineas != 0 or type(lineas) != int or lineas < 1:
+    if not texto.strip() or texto.isdigit() or len(texto)%lineas != 0 or type(lineas) != int or lineas < 1:
         raise Exception("Revisé los valores qué ingresó, alguno de ellos es inválido")
     columna = len(texto)//lineas
     filas = []
