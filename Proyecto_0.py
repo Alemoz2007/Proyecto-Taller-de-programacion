@@ -71,10 +71,10 @@ el cifrado PlayFair; '5' para el cifrado Rail Fence; '6' para el cifrado escíta
                  while selección not in ("1", "2"):
                      selección=input("Digite uno de los valores válidos: ")
                  if selección == "1":
-                     texto=input("Diguite el texto que desea codificar: ")
+                     texto=input("Digite el texto que desea codificar: ")
                      print (f"Su texto codificado es: {railfenceCod(texto)}")
                  else:
-                     texto=input("Diguite el texto que desea descodificar: ")
+                     texto=input("Digite el texto que desea descodificar: ")
                      if type(texto) != str or texto == "":
                          raise Exception("El texto debe ser de tipo string, y tener algo escrito dentro")
                      print (f"Su texto descodificado es: {railfenceDec(texto)}")
@@ -84,11 +84,11 @@ el cifrado PlayFair; '5' para el cifrado Rail Fence; '6' para el cifrado escíta
                  while selección not in ("1", "2"):
                      selección=input("Digite uno de los valores válidos: ")
                  if selección == "1":
-                     texto=input("Diguite el texto que desea codificar: ")
+                     texto=input("Digite el texto que desea codificar: ")
                      lineas = int(input("Digite la cantidad de letras que desea en cada 'vuelta': "))
                      print (f"Su texto codificado es: {escitalaCod(texto, lineas)}")
                  else:
-                     texto=input("Diguite el texto que desea descodificar: ")
+                     texto=input("Digite el texto que desea descodificar: ")
                      lineas = int(input("Digite la cantidad de letras que hay en cada 'vuelta': "))
                      print (f"Su texto descodificado es: {escitalaDec(texto, lineas)}")
         except Exception as e:
@@ -194,7 +194,12 @@ def preparar(dato):
     dato = dato.replace("ü", "u")
     return dato
 
-def vigenereCod(mensaje, clave):    
+def vigenereCod(mensaje, clave):
+    """Funcion que se encarga de la codificacion del cifrado vigenere.
+    Entradas y restricciones:
+    -Texto
+    -Palabra clave
+    Salidas: Texto codificado."""
     letras_a_numeros = {
        'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6,
        'h': 7, 'i': 8, 'j': 9, 'k': 10, 'l': 11, 'm': 12, 'n': 13,
@@ -237,35 +242,40 @@ def leerMensaje2():
     return mensaje2
 
 def vigenereDec(mensaje, clave):
-        letras_a_numeros = {
+    """Funcion que se encarga de la decodificacion del cifrado vigenere.
+    Entradas y restricciones:
+    -Texto
+    -Palabra clave
+    Salidas: Texto decodificado."""
+    letras_a_numeros = {
            'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6,
            'h': 7, 'i': 8, 'j': 9, 'k': 10, 'l': 11, 'm': 12, 'n': 13,
            'ñ': 14, 'o': 15, 'p': 16, 'q': 17, 'r': 18, 's': 19, 't': 20,
            'u': 21, 'v': 22, 'w': 23, 'x': 24, 'y': 25, 'z': 26
         }
-        numeros_a_letras = {
+    numeros_a_letras = {
            0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g',
            7: 'h', 8: 'i', 9: 'j', 10: 'k', 11: 'l', 12: 'm', 13: 'n',
            14: 'ñ', 15: 'o', 16: 'p', 17: 'q', 18: 'r', 19: 's', 20: 't',
            21: 'u', 22: 'v', 23: 'w', 24: 'x', 25: 'y', 26: 'z'
         }
-        texto_descodificado = ""
-        posicion_clave = 0 
-        for letra in mensaje:
-            if letra in letras_a_numeros:
-                valor_mensaje = letras_a_numeros[letra]
-                letra_clave_actual = clave[posicion_clave]
-                valor_clave = letras_a_numeros[letra_clave_actual]
-                resta = valor_mensaje - valor_clave
-                nuevo_valor = resta % 27
-                nueva_letra = numeros_a_letras[nuevo_valor]
-                texto_descodificado = texto_descodificado + nueva_letra
-                posicion_clave = posicion_clave + 1
-                if posicion_clave == len(clave):
-                    posicion_clave = 0
-            else:
-                texto_descodificado = texto_descodificado + letra
-        return texto_descodificado
+    texto_descodificado = ""
+    posicion_clave = 0 
+    for letra in mensaje:
+        if letra in letras_a_numeros:
+            valor_mensaje = letras_a_numeros[letra]
+            letra_clave_actual = clave[posicion_clave]
+            valor_clave = letras_a_numeros[letra_clave_actual]
+            resta = valor_mensaje - valor_clave
+            nuevo_valor = resta % 27
+            nueva_letra = numeros_a_letras[nuevo_valor]
+            texto_descodificado = texto_descodificado + nueva_letra
+            posicion_clave = posicion_clave + 1
+            if posicion_clave == len(clave):
+                posicion_clave = 0
+        else:
+            texto_descodificado = texto_descodificado + letra
+    return texto_descodificado
 
 def mainPlayfair():
     """Programa principal del algoritmo playfair.
@@ -355,7 +365,7 @@ def ponerEspacios(texto_original, texto_nuevo):
     return resultado
 
 def playfairCod(mensaje, clave):
-    """Funcion para la codificacion de el algoritmo playfair.
+    """Funcion para la codificacion de el cifrado playfair.
     Entradas y restricciones:
     -Palabra clave
     -Texto a codificar
@@ -384,7 +394,7 @@ def playfairCod(mensaje, clave):
     return texto_codificado
 
 def playfairDec(mensaje, clave):
-    """Funcion que se encarga de la decodificacion del algoritmo playfair.
+    """Funcion que se encarga de la decodificacion del cifrado playfair.
     Entradas y restricciones:
     -Palabra clave
     -Texto a decodificar
@@ -419,6 +429,10 @@ ALFABETO = "abcdefghijklmnñopqrstuvwxyz"
 
 
 def limpiarTexto(texto):
+    """Funcion que se encarga de limpiar y preparar el texto para el cifrado de cesar.
+    Entrada y restricciones:
+    -Texto
+    Salidas: Texto limpio y preparado para usarse."""
     texto = texto.lower()
 
     reemplazos = {
@@ -438,6 +452,11 @@ def limpiarTexto(texto):
     return texto_limpio
 
 def cesarCod(texto, desplazamiento):
+    """Funcion que se encarga de la codificacion del cifrado cesar.
+    Entradas y restricciones:
+    -Texto
+    -Desplazamiento
+    Salidas: Texto codificado."""
     if type(desplazamiento) != int:
         raise Exception("El desplazamiento debe ser un número entero")
     texto = limpiarTexto(texto)
@@ -452,6 +471,11 @@ def cesarCod(texto, desplazamiento):
     return resultado
 
 def cesarDec(texto, desplazamiento):
+    """Funcion que se encarga de la decodificacion del cifrado cesar.
+    Entradas y restricciones:
+    -Texto
+    -Desplazamiento
+    Salidas: Texto decodificado."""
     if type(desplazamiento) != int:
         raise Exception("El desplazamiento debe ser un número entero")
     texto = limpiarTexto(texto)
@@ -604,6 +628,10 @@ Salidas: True en el caso de que el usuario desee continuar, en caso contrario Fa
         return False
 
 def crearAlfabetoClave(palabra):
+    """Funcion que se encarga de crear el alfabeto para el cifrado mono alfabetico.
+    Entradas y restricciones:
+    -Palabra clave
+    Salidas: El alfabeto creado."""
     palabra = limpiarTexto(palabra)
     if palabra == "":
         raise Exception(
@@ -620,6 +648,11 @@ def crearAlfabetoClave(palabra):
     return alfabeto_cifrado
 
 def monoCod(texto, palabra):
+    """Funcion que se encarga de la codificacion del cifrado monoalfabetico.
+    Entradas y restricciones:
+    -Texto
+    -Palabra clave
+    Salidas: Texto codificado."""
     texto = limpiarTexto(texto)
     alfabeto_cifrado = crearAlfabetoClave(
         palabra
@@ -634,6 +667,11 @@ def monoCod(texto, palabra):
     return resultado
 
 def monoDec(texto, palabra):
+    """Funcion que se encarga de la decodificacion del cifrado monoalfabetico.
+    Entradas y restricciones:
+    -Texto
+    -Palabra clave
+    Salidas: Texto decodificado."""
     texto = limpiarTexto(texto)
     alfabeto_cifrado = crearAlfabetoClave(
         palabra
